@@ -18,7 +18,7 @@ export default class Search {
  
 
 
-//we remove the query as a parameter because we will be reading the query from the object itself, which is the constructor 
+ //we remove the query as a parameter because we will be reading the query from the object itself, which is the constructor 
 //we will add this. to query because the query will already be in the object itself once we call the get get results method 
 //We also change it to this.result because we want the results to be changed in the object itself.
 

@@ -1,4 +1,7 @@
 import Search from './models/Search';
+import * as SearchView from './views/SearchView';
+import {elements} from './views/base';
+
 /**GLOBAL STATE OF THE APP. All this data will be stored in one central variable 
  * -Search Object: all the data about the search. Search query and search results
  * -Current Recipe object 
@@ -9,24 +12,24 @@ const state = {}
 
 const controlSearch =  async () => {
     //1. We want to get the query from the view
-    const query = 'pizza';
-
+    const query = SearchView.getInput();
     //If there is a query, we want to create a new search object 
     if (query){
         //2  New search object and add it to state 
         state.search = new Search(query);
 
         //3 Prepare UI for search results 
-
+        SearchView.clearInput();
+        SearchView.clearResults();
         //4 Search for recipes 
        await state.search.getResults();
 
         //5 render results on UI 
-        console.log(state.search.result)
+        SearchView.renderResults(state.search.result);
     }
 
 }
-document.querySelector('.search').addEventListener('submit', e => {
+elements.searchForm.addEventListener('submit', e => {
     e.preventDefault();
     controlSearch();
 });
@@ -52,3 +55,9 @@ document.querySelector('.search').addEventListener('submit', e => {
 //Remember, state.search is where the object now lives 
 // new Search(query) this is a new instance based on the search class
 //we have to get getResults methods available so that we can dislplay the results in the UI 
+
+
+//we have to await the promoise await state.search.getResults(); because we want the rendering 
+//of the results to happen after we actually recieve the results from the API 
+//Then we make it an async function by adding async
+//Remember every asyncronous function automatically returns a function 
