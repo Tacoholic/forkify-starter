@@ -1,6 +1,6 @@
 import Search from './models/Search';
 import * as SearchView from './views/SearchView';
-import {elements} from './views/base';
+import {elements, renderLoader, clearLoader} from './views/base';
 
 /**GLOBAL STATE OF THE APP. All this data will be stored in one central variable 
  * -Search Object: all the data about the search. Search query and search results
@@ -21,10 +21,13 @@ const controlSearch =  async () => {
         //3 Prepare UI for search results 
         SearchView.clearInput();
         SearchView.clearResults();
+        renderLoader(elements.searchRes);
+
         //4 Search for recipes 
        await state.search.getResults();
 
         //5 render results on UI 
+        clearLoader();
         SearchView.renderResults(state.search.result);
     }
 

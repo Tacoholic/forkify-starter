@@ -10,6 +10,8 @@ export const clearResults = () => {
     elements.searchResList.innerHTML = '';
 }
 
+//Pasta with tomato and spinach
+
 const limitRecipeTitle = (title, limit = 17) => {
  const newTitle = [];
  if(title.length > limit){
