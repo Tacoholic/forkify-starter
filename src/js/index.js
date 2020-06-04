@@ -1,4 +1,5 @@
 import Search from './models/Search';
+import Recipe from './models/Recipe';
 import * as SearchView from './views/SearchView';
 import {elements, renderLoader, clearLoader} from './views/base';
 
@@ -9,6 +10,8 @@ import {elements, renderLoader, clearLoader} from './views/base';
  * -Liked Recipes
  */
 const state = {}
+
+
 
 const controlSearch =  async () => {
     //1. We want to get the query from the view
@@ -46,7 +49,10 @@ elements.searchResPages.addEventListener('click', e => {
     }
 });
 
-
+//SEARCH CONTROLLER//
+const r = new Recipe(35626);
+r.getRecipe();
+console.log(r);
 //Remember, the text inside the parenthesis is the query
 //Also, the query in constructor over in Searchjs is the query parameter we need to specify
 //whenever we create a new object based on the search class 
