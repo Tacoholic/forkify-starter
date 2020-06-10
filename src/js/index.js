@@ -26,14 +26,18 @@ const controlSearch =  async () => {
         SearchView.clearResults();
         renderLoader(elements.searchRes);
 
-        //4 Search for recipes 
+        try {
+             //4 Search for recipes 
        await state.search.getResults();
 
-        //5 render results on UI 
-        clearLoader();
-        SearchView.renderResults(state.search.result);
+       //5 render results on UI 
+       clearLoader();
+       SearchView.renderResults(state.search.result);
+        } catch (err) {
+            alert('Something wrong with the search...')
+            clearLoader();
+        }
     }
-
 }
 elements.searchForm.addEventListener('submit', e => {
     e.preventDefault();
@@ -50,9 +54,38 @@ elements.searchResPages.addEventListener('click', e => {
 });
 
 //SEARCH CONTROLLER//
-const r = new Recipe(35626);
-r.getRecipe();
-console.log(r);
+const controlRecipe = async () => {
+    //Get ID from the URL and replace the # with nothing
+    const id = window.location.hash.replace('#', '');
+    console.log(id);
+    if (id) {
+        //Prepare UI for changes
+
+        //Create new recipe object. Here we are creating a new recipe based on our model and then saving it to state.
+        state.recipe = new Recipe(id);
+        try {
+
+             //Get recipe data. Remember, we want this to happen asynchronously so it will return a promise
+        await state.recipe.getRecipe();
+
+        //Calculate servings and time 
+        state.recipe.calcTime();
+        state.recipe.calcServings();
+        //Render the recipe
+        console.log(state.recipe);
+
+        } catch (err){
+            alert('something went wrong. please be patient')
+        }
+    }
+};
+// window.addEventListener('hashchange', controlRecipe);
+// window.addEventListener('load', controlRecipe);
+
+//Refactored, we saved the strings for these two event types into an array and then looped over them while calling window.addEventlistener
+//This is our load event
+['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
+
 //Remember, the text inside the parenthesis is the query
 //Also, the query in constructor over in Searchjs is the query parameter we need to specify
 //whenever we create a new object based on the search class 
