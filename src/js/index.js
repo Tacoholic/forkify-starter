@@ -11,74 +11,95 @@ import {elements, renderLoader, clearLoader} from './views/base';
  */
 const state = {}
 
-
-
-const controlSearch =  async () => {
-    //1. We want to get the query from the view
+//SEARCH CONTROLLER//
+const controlSearch = async () => {
+    // 1) Get query from view
     const query = SearchView.getInput();
-    //If there is a query, we want to create a new search object 
-    if (query){
-        //2  New search object and add it to state 
+
+    if (query) {
+        // 2) New search object and add to state
         state.search = new Search(query);
 
-        //3 Prepare UI for search results 
+        // 3) Prepare UI for results
         SearchView.clearInput();
         SearchView.clearResults();
         renderLoader(elements.searchRes);
 
         try {
-             //4 Search for recipes 
-       await state.search.getResults();
-
-       //5 render results on UI 
-       clearLoader();
-       SearchView.renderResults(state.search.result);
+            // 4) Search for recipes
+            await state.search.getResults();
+    
+            // 5) Render results on UI
+            clearLoader();
+            SearchView.renderResults(state.search.result);
         } catch (err) {
-            alert('Something wrong with the search...')
+            alert('Something wrong with the search...');
             clearLoader();
         }
     }
 }
+
 elements.searchForm.addEventListener('submit', e => {
     e.preventDefault();
     controlSearch();
 });
 
+
 elements.searchResPages.addEventListener('click', e => {
-  const btn = e.target.closest('.btn-inline');
+    const btn = e.target.closest('.btn-inline');
     if (btn) {
         const goToPage = parseInt(btn.dataset.goto, 10);
-        SearchView.clearResults();
-        SearchView.renderResults(state.search.result, goToPage);
+        searchView.clearResults();
+        searchView.renderResults(state.search.result, goToPage);
     }
 });
 
-//SEARCH CONTROLLER//
+/** 
+ * RECIPE CONTROLLER
+ */
 const controlRecipe = async () => {
-    //Get ID from the URL and replace the # with nothing
+    // Get ID from url
     const id = window.location.hash.replace('#', '');
-    console.log(id);
+
     if (id) {
-        //Prepare UI for changes
+        // Prepare UI for changes
+        // recipeView.clearRecipe();
+        // renderLoader(elements.recipe);
 
-        //Create new recipe object. Here we are creating a new recipe based on our model and then saving it to state.
+        // Highlight selected search item
+        // if (state.search) searchView.highlightSelected(id);
+
+        // Create new recipe object
         state.recipe = new Recipe(id);
+
         try {
+            // Get recipe data and parse ingredients
+            await state.recipe.getRecipe();
+            console.log(state.recipe.ingredients);
+            state.recipe.parseIngredients();
 
-             //Get recipe data. Remember, we want this to happen asynchronously so it will return a promise
-        await state.recipe.getRecipe();
+            // Calculate servings and time
+            state.recipe.calcTime();
+            state.recipe.calcServings();
+    
+            // Render recipe
+            // clearLoader();
+            // recipeView.renderRecipe(
+            //     state.recipe,
+            //     state.likes.isLiked(id)
+            // );
+            console.log(state.recipe);
 
-        //Calculate servings and time 
-        state.recipe.calcTime();
-        state.recipe.calcServings();
-        //Render the recipe
-        console.log(state.recipe);
-
-        } catch (err){
-            alert('something went wrong. please be patient')
+        } catch (err) {
+            console.log(err);
+            alert('Error processing recipe!');
         }
     }
 };
+ 
+['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
+
+
 // window.addEventListener('hashchange', controlRecipe);
 // window.addEventListener('load', controlRecipe);
 
@@ -109,4 +130,4 @@ const controlRecipe = async () => {
 //we have to await the promoise await state.search.getResults(); because we want the rendering 
 //of the results to happen after we actually recieve the results from the API 
 //Then we make it an async function by adding async
-//Remember every asyncronous function automatically returns a function 
+//Remember every asyncronous function automatically returns a function **/
