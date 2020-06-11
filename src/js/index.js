@@ -2,7 +2,7 @@ import Search from './models/Search';
 import Recipe from './models/Recipe';
 import * as SearchView from './views/SearchView';
 import * as RecipeView from './views/RecipeView';
-import {elements, renderLoader, clearLoader} from './views/base';
+import {elements, renderLoader, clearLoader, elementStrings} from './views/base';
 
 /**GLOBAL STATE OF THE APP. All this data will be stored in one central variable 
  * -Search Object: all the data about the search. Search query and search results
@@ -113,6 +113,23 @@ const controlRecipe = async () => {
 //Refactored, we saved the strings for these two event types into an array and then looped over them while calling window.addEventlistener
 //This is our load event
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
+
+//Handling Recipe button clicks
+elements.recipe.addEventListener('click', e => {
+    if (e.target.matches('.btn-decrease, .btn-decrease *')){
+        //Decrease button is clicked 
+    if (state.recipe.servings > 1){
+        state.recipe.updateServings('dec');
+        RecipeView.updateServingsIngredients(state.recipe);
+        }
+    } else if (e.target.matches('.btn-increase, .btn-increase * ')){
+        //increase button is clicked
+        state.recipe.updateServings('inc');
+        RecipeView.updateServingsIngredients(state.recipe);
+    }
+    console.log(state.recipe);
+})
+
 
 //Remember, the text inside the parenthesis is the query
 //Also, the query in constructor over in Searchjs is the query parameter we need to specify
