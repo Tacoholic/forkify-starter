@@ -31,7 +31,7 @@ export default class Recipe {
     parseIngredients(){
         const unitsLong = ['tablepoons', 'tablespoon', 'ounces', 'ounce', 'teaspoons', 'teaspoon', 'cups', 'pounds'];
         const unitsShort = ['tbsp', 'tbsp', 'oz', 'oz', 'tsp', 'tsp', 'cup', 'pound'];
-
+        const units = [...unitsShort, 'kg', 'g'];
         //Going to create new array, with new ingredients base on the old array 
         const newIngredients = this.ingredients.map(el => {
             //1. All units should be the same 
@@ -48,14 +48,14 @@ export default class Recipe {
             //First we must convert ingredient into an array. With split, each word will become a new element in the array
             const arrIng = ingredient.split(' ');
             //next is find the index in which the united is located
-            const unitIndex = arrIng.findIndex(el2 => unitsShort .includes(el2))
+            const unitIndex = arrIng.findIndex(el2 => units.includes(el2))
 
             let objIng;
             if (unitIndex > -1){
                 //there is a unit
                 //Ex. 4 1/2 cups, arrCount is [4, 1/2] eval("4+1/2") --> 4.5
                 //Ex. 4 cups, arrCount is [4];
-                const arrCount = argIng.slice(0, unitIndex); 
+                const arrCount = arrIng.slice(0, unitIndex); 
                 let count;
                 if (arrCount.length === 1){
                     count = eval(arrIng[0].replace('-', '+'));

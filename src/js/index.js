@@ -1,6 +1,7 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
 import * as SearchView from './views/SearchView';
+import * as RecipeView from './views/RecipeView';
 import {elements, renderLoader, clearLoader} from './views/base';
 
 /**GLOBAL STATE OF THE APP. All this data will be stored in one central variable 
@@ -65,6 +66,8 @@ const controlRecipe = async () => {
         // Prepare UI for changes
         // recipeView.clearRecipe();
         // renderLoader(elements.recipe);
+        RecipeView.clearRecipe();
+        renderLoader(elements.recipe);
 
         // Highlight selected search item
         // if (state.search) searchView.highlightSelected(id);
@@ -88,7 +91,8 @@ const controlRecipe = async () => {
             //     state.recipe,
             //     state.likes.isLiked(id)
             // );
-            console.log(state.recipe);
+            clearLoader();
+            RecipeView.renderRecipe(state.recipe);
 
         } catch (err) {
             console.log(err);
