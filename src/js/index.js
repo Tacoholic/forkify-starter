@@ -69,6 +69,9 @@ const controlRecipe = async () => {
         RecipeView.clearRecipe();
         renderLoader(elements.recipe);
 
+        //Highlight selected Item 
+        if (state.search) SearchView.highlightSelected(id);
+
         // Highlight selected search item
         // if (state.search) searchView.highlightSelected(id);
 
