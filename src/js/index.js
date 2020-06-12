@@ -138,6 +138,10 @@ elements.shopping.addEventListener('click', e => {
         state.list.deleteItem(id);
         //Delete from UI
         ListView.deleteItem(id);
+        //Handle count update
+    } else if (e.target.matches('.shopping__count-value')){
+        const val = parseFloat(e.target.value)
+        state.list.updateCount(id, val);
     }
 })
 
