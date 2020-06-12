@@ -13,6 +13,7 @@ import {elements, renderLoader, clearLoader, elementStrings} from './views/base'
  * -Liked Recipes
  */
 const state = {}
+window.state = state;
 
 //SEARCH CONTROLLER//
 const controlSearch = async () => {
@@ -126,6 +127,19 @@ const controlList = () => {
         ListView.renderItem(item);
     });
 }
+
+//Handle delete and update list item events
+elements.shopping.addEventListener('click', e => {
+    const id = e.target.closest('.shopping__item').dataset.itemid;
+
+    //handle delete event
+    if (e.target.matches('.shopping__delete, .shopping__delete *')){
+        //Delete from state
+        state.list.deleteItem(id);
+        //Delete from UI
+        ListView.deleteItem(id);
+    }
+})
 
 
 //Handling Recipe button clicks
