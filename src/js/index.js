@@ -5,6 +5,7 @@ import Likes from './models/Likes';
 import * as SearchView from './views/SearchView';
 import * as RecipeView from './views/RecipeView';
 import * as ListView from './views/ListView';
+import * as LikesView from './views/LikesView';
 import {elements, renderLoader, clearLoader, elementStrings} from './views/base';
 
 /**GLOBAL STATE OF THE APP. All this data will be stored in one central variable 
@@ -99,7 +100,10 @@ const controlRecipe = async () => {
             //     state.likes.isLiked(id)
             // );
             clearLoader();
-            RecipeView.renderRecipe(state.recipe);
+            RecipeView.renderRecipe(
+                state.recipe,
+                state.likes.isLiked(id)
+                );
 
         } catch (err) {
             console.log(err);
@@ -147,6 +151,9 @@ elements.shopping.addEventListener('click', e => {
 })
 
 
+
+
+
 //RECIPE CONTROLLER
 const controlLike = () => {
     if (!state.likes) state.likes = new Likes();
@@ -162,21 +169,34 @@ const controlLike = () => {
             state.recipe.img
         );
         //Toggle the button 
-
+        LikesView.toggleLikeBtn(true);
 
         //Add like to the UI
-
+        LikesView.renderLike(newLike);
         //User has liked it
     } else {
         //Remove like from the state
-        state.likes.deleteLike(currentId);
+        state.likes.deleteLike(currentID);
         //Toggle the button 
-
-
+        LikesView.toggleLikeBtn(false);
         //Remove like from the UI
-        
+        LikesView.deleteLike(currentID);
+       
     }
+    LikesView.toggleLikeMenu(state.likes.getNumLikes());
 };
+
+//REstore liked recipes on page load
+window.addEventListener('load', () => {
+    state.likes = new Likes(); 
+    //restore likes
+    state.likes.readStorage();
+    //Toggle like menu
+    LikesView.toggleLikeMenu(state.likes.getNumLikes());
+
+    //Render the existing likes 
+    state,likes.likes.forEach(like => LikesView.renderLike(like));
+});
 
 //Handling Recipe button clicks
 elements.recipe.addEventListener('click', e => {
